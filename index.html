@@ -2,197 +2,354 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>매입사별 발주현황</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>매입사별 발주현황</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+* {
+  box-sizing: border-box;
+}
 
-    body {
-      margin: 0;
-      padding: 20px;
-      font-family: Arial, "Malgun Gothic", sans-serif;
-      background: #f5f6fa;
-      color: #333;
-    }
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: Arial, "Malgun Gothic", sans-serif;
+  background: #f4f6fa;
+  color: #333;
+}
 
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-    }
+.container {
+  max-width: 1400px;
+  margin: auto;
+}
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      gap: 10px;
-    }
+/* 상단 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
 
-    h1 {
-      margin: 0;
-      font-size: 25px;
-    }
+h1 {
+  margin: 0;
+  font-size: 25px;
+}
 
-    button {
-      border: none;
-      cursor: pointer;
-      border-radius: 7px;
-      padding: 10px 16px;
-      font-size: 14px;
-    }
+.refresh-btn {
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 11px 16px;
+  font-size: 14px;
+  cursor: pointer;
+}
 
-    .refresh-btn {
-      background: #333;
-      color: white;
-    }
+/* 매입사 탭 */
+.tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
 
-    .tabs {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
+.tab {
+  background: white;
+  border: 1px solid #ddd;
+  color: #555;
+  border-radius: 8px;
+  padding: 11px 17px;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+}
 
-    .tab {
-      background: white;
-      border: 1px solid #ddd;
-      color: #555;
-    }
+.tab.active {
+  background: #333;
+  color: white;
+  border-color: #333;
+}
 
-    .tab.active {
-      background: #333;
-      color: white;
-      border-color: #333;
-    }
+/* 검색 및 필터 */
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
 
-    .controls {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
-      flex-wrap: wrap;
-    }
+input, select {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  min-height: 44px;
+}
 
-    input, select {
-      padding: 11px;
-      border: 1px solid #ddd;
-      border-radius: 7px;
-      font-size: 14px;
-      background: white;
-    }
+input {
+  flex: 1;
+  min-width: 150px;
+}
 
-    input {
-      flex: 1;
-      min-width: 200px;
-    }
+/* PC 테이블 */
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
 
-    .table-wrap {
-      width: 100%;
-      overflow-x: auto;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
+table {
+  width: 100%;
+  min-width: 850px;
+  border-collapse: collapse;
+}
 
-    table {
-      width: 100%;
-      min-width: 850px;
-      border-collapse: collapse;
-    }
+th {
+  background: #f0f1f5;
+  padding: 15px 10px;
+  font-size: 13px;
+  border-bottom: 1px solid #ddd;
+  white-space: nowrap;
+}
 
-    th {
-      background: #f0f1f5;
-      padding: 14px 10px;
-      font-size: 13px;
-      border-bottom: 1px solid #ddd;
-      white-space: nowrap;
-    }
+td {
+  padding: 14px 10px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+  font-size: 13px;
+}
 
-    td {
-      padding: 13px 10px;
-      text-align: center;
-      border-bottom: 1px solid #eee;
-      font-size: 13px;
-    }
+tr:hover {
+  background: #fafafa;
+}
 
-    tr:hover {
-      background: #fafafa;
-    }
+/* 진행상태 */
+.status {
+  display: inline-block;
+  padding: 7px 12px;
+  border-radius: 7px;
+  font-weight: bold;
+  white-space: nowrap;
+}
 
-    /* 진행상태별 색상 */
+.status-order {
+  background: #f8c9dc;
+  color: #9b174e;
+}
 
-    .status {
-      display: inline-block;
-      padding: 7px 12px;
-      border-radius: 6px;
-      font-weight: bold;
-      white-space: nowrap;
-      min-width: 75px;
-    }
+.status-delivered {
+  background: #c8f0d1;
+  color: #176b32;
+}
 
-    .status-order {
-      background: #f8c9dc;
-      color: #9b174e;
-    }
+.status-before {
+  background: #ffd0d0;
+  color: #b42323;
+}
 
-    .status-delivered {
-      background: #c8f0d1;
-      color: #176b32;
-    }
+.status-soldout {
+  background: #ffd0d0;
+  color: #b42323;
+}
 
-    .status-before {
-      background: #ffd0d0;
-      color: #b42323;
-    }
+/* 모바일 카드 */
+.mobile-list {
+  display: none;
+}
 
-    .status-soldout {
-      background: #ffd0d0;
-      color: #b42323;
-    }
+.order-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border: 1px solid #eceef2;
+}
 
-    .empty {
-      padding: 40px;
-      text-align: center;
-      color: #888;
-    }
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 13px;
+}
 
-    .error {
-      padding: 25px;
-      text-align: center;
-      color: #d00;
-    }
+.card-date {
+  font-size: 13px;
+  color: #777;
+}
 
-    .loading {
-      padding: 40px;
-      text-align: center;
-      color: #777;
-    }
+.card-product {
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1.5;
+  margin-bottom: 14px;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
 
-    @media (max-width: 600px) {
-      body {
-        padding: 12px;
-      }
+.card-quantity {
+  display: inline-block;
+  background: #f2f4f7;
+  border-radius: 7px;
+  padding: 8px 12px;
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 14px;
+}
 
-      h1 {
-        font-size: 20px;
-      }
+.card-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  padding-top: 13px;
+  border-top: 1px solid #eee;
+}
 
-      .header {
-        align-items: flex-start;
-      }
+.info-label {
+  display: block;
+  color: #999;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
 
-      .controls {
-        flex-direction: column;
-      }
+.info-value {
+  font-size: 14px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+}
 
-      input, select {
-        width: 100%;
-      }
-    }
-  </style>
+.card-note {
+  margin-top: 13px;
+  padding: 11px;
+  background: #f8f9fb;
+  border-radius: 7px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #555;
+  overflow-wrap: anywhere;
+}
+
+.empty, .loading, .error {
+  padding: 40px;
+  text-align: center;
+  color: #888;
+}
+
+/* 모바일 최적화 */
+@media (max-width: 700px) {
+
+  body {
+    padding: 12px;
+  }
+
+  .header {
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-size: 19px;
+  }
+
+  .refresh-btn {
+    padding: 10px 12px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  /* 매입사 탭 가로 스크롤 */
+  .tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    margin-right: -12px;
+    padding-right: 12px;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tab {
+    padding: 11px 16px;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* 검색과 필터 */
+  .controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .controls input {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .controls select {
+    width: 100%;
+    min-width: 0;
+    font-size: 13px;
+    padding: 10px 7px;
+  }
+
+  /* PC 표 숨김 */
+  .table-wrap {
+    display: none;
+  }
+
+  /* 모바일 카드 표시 */
+  .mobile-list {
+    display: block;
+  }
+
+  .order-card {
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+
+  .card-product {
+    font-size: 17px;
+  }
+
+  .status {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .empty, .loading, .error {
+    padding: 35px 15px;
+    background: white;
+    border-radius: 10px;
+  }
+}
+
+/* 작은 모바일 */
+@media (max-width: 360px) {
+
+  body {
+    padding: 9px;
+  }
+
+  h1 {
+    font-size: 17px;
+  }
+
+  .card-info {
+    gap: 8px;
+  }
+
+  .card-product {
+    font-size: 16px;
+  }
+}
+</style>
 </head>
 
 <body>
@@ -226,12 +383,15 @@
     </select>
 
     <select id="sortFilter" onchange="render()">
-      <option value="order">발주일자순</option>
-      <option value="arrival">도착예정일순</option>
+      <option value="arrival">도착예정일 빠른 순</option>
+      <option value="arrivalDesc">도착예정일 늦은 순</option>
+      <option value="order">발주일자 최신 순</option>
+      <option value="orderAsc">발주일자 오래된 순</option>
     </select>
 
   </div>
 
+  <!-- PC 화면 -->
   <div class="table-wrap">
     <table>
       <thead>
@@ -256,349 +416,567 @@
     </table>
   </div>
 
+  <!-- 모바일 화면 -->
+  <div class="mobile-list" id="mobileList">
+    <div class="loading">데이터를 불러오는 중입니다.</div>
+  </div>
+
 </div>
 
 <script>
-  const SPREADSHEET_ID =
-    "1XfJfi53u2t21jKdKJofoGyijiPOmkot76Z-NOmSRpaU";
 
-  const SHEETS = [
-    "3M",
-    "프린텍",
-    "유니",
-    "짐모아",
-    "스테들러",
-    "아톰",
-    "파이롯트",
-    "항소"
-  ];
+const SPREADSHEET_ID =
+  "1XfJfi53u2t21jKdKJofoGyijiPOmkot76Z-NOmSRpaU";
 
-  let currentSheet = "3M";
-  let allData = {};
+const SHEETS = [
+  "3M",
+  "프린텍",
+  "유니",
+  "짐모아",
+  "스테들러",
+  "아톰",
+  "파이롯트",
+  "항소"
+];
 
-  // 매입사 탭 생성
-  function createTabs() {
-    const tabs = document.getElementById("tabs");
+let currentSheet = "3M";
+let allData = {};
 
-    tabs.innerHTML = "";
+/* 매입사 탭 생성 */
+function createTabs() {
 
-    SHEETS.forEach(sheet => {
-      const button = document.createElement("button");
+  const tabs = document.getElementById("tabs");
+  tabs.innerHTML = "";
 
-      button.className =
-        "tab" + (sheet === currentSheet ? " active" : "");
+  SHEETS.forEach(sheet => {
 
-      button.textContent = sheet;
+    const button = document.createElement("button");
 
-      button.onclick = function() {
-        currentSheet = sheet;
-        createTabs();
-        render();
-      };
+    button.className =
+      "tab" + (sheet === currentSheet ? " active" : "");
 
-      tabs.appendChild(button);
-    });
-  }
+    button.textContent = sheet;
 
-  // 구글 시트 날짜 처리
-  function formatDate(value) {
-    if (!value) return "";
+    button.onclick = function() {
 
-    if (typeof value === "string") {
-      const match = value.match(
-        /Date\((\d+),(\d+),(\d+)\)/
-      );
+      currentSheet = sheet;
 
-      if (match) {
-        const year = Number(match[1]);
-        const month = Number(match[2]) + 1;
-        const day = Number(match[3]);
+      createTabs();
+      render();
 
-        return `${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
-      }
+    };
 
-      return value;
+    tabs.appendChild(button);
+
+  });
+
+}
+
+/* 날짜 처리 */
+function formatDate(value) {
+
+  if (!value) return "";
+
+  if (typeof value === "string") {
+
+    const match = value.match(
+      /Date\((\d+),(\d+),(\d+)\)/
+    );
+
+    if (match) {
+
+      const year = Number(match[1]);
+      const month = Number(match[2]) + 1;
+      const day = Number(match[3]);
+
+      return `${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+
     }
 
     return value;
+
   }
 
-  // 셀 데이터 가져오기
-  function getValue(cell) {
-    if (!cell) return "";
+  return value;
 
-    if (cell.f !== undefined && cell.f !== null) {
-      return cell.f;
-    }
+}
 
-    if (cell.v !== undefined && cell.v !== null) {
-      return formatDate(cell.v);
-    }
+/* 셀 값 가져오기 */
+function getValue(cell) {
 
-    return "";
+  if (!cell) return "";
+
+  if (cell.f !== undefined && cell.f !== null) {
+    return cell.f;
   }
 
-  // 진행상태별 CSS 클래스
-  function getStatusClass(status) {
-    const value = String(status).trim();
-
-    switch (value) {
-      case "발주완료":
-        return "status-order";
-
-      case "배송완료":
-        return "status-delivered";
-
-      case "배송전":
-        return "status-before";
-
-      case "품절":
-        return "status-soldout";
-
-      default:
-        return "";
-    }
+  if (cell.v !== undefined && cell.v !== null) {
+    return formatDate(cell.v);
   }
 
-  // HTML 특수문자 처리
-  function escapeHTML(value) {
-    return String(value ?? "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+  return "";
+
+}
+
+/* 상태별 색상 */
+function getStatusClass(status) {
+
+  const value = String(status).trim();
+
+  switch (value) {
+
+    case "발주완료":
+      return "status-order";
+
+    case "배송완료":
+      return "status-delivered";
+
+    case "배송전":
+      return "status-before";
+
+    case "품절":
+      return "status-soldout";
+
+    default:
+      return "";
+
   }
 
-  // 구글 시트 불러오기
-  function loadSheet(sheetName) {
-    return new Promise((resolve, reject) => {
+}
 
-      const callbackName =
-        "googleSheetCallback_" +
-        Date.now() +
-        "_" +
-        Math.random().toString(36).substring(2);
+/* HTML 보안 처리 */
+function escapeHTML(value) {
 
-      const script = document.createElement("script");
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 
-      const timeout = setTimeout(() => {
-        cleanup();
-        reject(new Error("데이터 불러오기 시간 초과"));
-      }, 15000);
+}
 
-      function cleanup() {
-        clearTimeout(timeout);
+/* 날짜 정렬용 숫자 변환 */
+function dateToNumber(value) {
 
-        if (script.parentNode) {
-          script.parentNode.removeChild(script);
-        }
+  if (!value) return null;
 
-        try {
-          delete window[callbackName];
-        } catch (e) {
-          window[callbackName] = undefined;
-        }
+  const text = String(value).trim();
+
+  // YYYY-MM-DD 또는 YYYY.MM.DD
+  const match = text.match(
+    /^(\d{4})[./-](\d{1,2})[./-](\d{1,2})/
+  );
+
+  if (match) {
+
+    return (
+      Number(match[1]) * 10000 +
+      Number(match[2]) * 100 +
+      Number(match[3])
+    );
+
+  }
+
+  // YYYYMMDD
+  const compact = text.match(/^(\d{4})(\d{2})(\d{2})$/);
+
+  if (compact) {
+    return Number(text);
+  }
+
+  // 그 외 날짜 문자열
+  const timestamp = Date.parse(text);
+
+  if (!Number.isNaN(timestamp)) {
+    const date = new Date(timestamp);
+
+    return (
+      date.getFullYear() * 10000 +
+      (date.getMonth() + 1) * 100 +
+      date.getDate()
+    );
+  }
+
+  return null;
+
+}
+
+/* 구글 시트 데이터 불러오기 */
+function loadSheet(sheetName) {
+
+  return new Promise((resolve, reject) => {
+
+    const callbackName =
+      "googleSheetCallback_" +
+      Date.now() +
+      "_" +
+      Math.random().toString(36).substring(2);
+
+    const script = document.createElement("script");
+
+    const timeout = setTimeout(() => {
+
+      cleanup();
+
+      reject(new Error("데이터 불러오기 시간 초과"));
+
+    }, 15000);
+
+    function cleanup() {
+
+      clearTimeout(timeout);
+
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
       }
 
-      window[callbackName] = function(response) {
-        cleanup();
+      try {
+        delete window[callbackName];
+      } catch (e) {
+        window[callbackName] = undefined;
+      }
 
-        try {
-          if (
-            !response ||
-            !response.table ||
-            !response.table.rows
-          ) {
-            reject(new Error("시트 데이터를 읽을 수 없습니다."));
-            return;
-          }
+    }
 
-          const rows = response.table.rows;
+    window[callbackName] = function(response) {
 
-          const data = rows.map(row => {
-            const cells = row.c || [];
+      cleanup();
 
-            return {
-              status: getValue(cells[0]),
-              orderDate: getValue(cells[1]),
-              product: getValue(cells[2]),
-              quantity: getValue(cells[3]),
-              unit: getValue(cells[4]),
-              arrivalDate: getValue(cells[5]),
-              note: getValue(cells[6])
-            };
+      try {
 
-          }).filter(item => {
-            return (
-              item.status ||
-              item.orderDate ||
-              item.product ||
-              item.quantity ||
-              item.note
-            );
-          });
+        if (
+          !response ||
+          !response.table ||
+          !response.table.rows
+        ) {
 
-          resolve(data);
+          reject(new Error("시트 데이터를 읽을 수 없습니다."));
+          return;
 
-        } catch (error) {
-          reject(error);
         }
-      };
 
-      const url =
-        `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?sheet=${encodeURIComponent(sheetName)}&tqx=out:json;responseHandler:${callbackName}`;
+        const rows = response.table.rows;
 
-      script.src = url;
+        const data = rows.map(row => {
 
-      script.onerror = function() {
-        cleanup();
-        reject(new Error("구글 시트 연결에 실패했습니다."));
-      };
+          const cells = row.c || [];
 
-      document.body.appendChild(script);
+          return {
+
+            status: getValue(cells[0]),
+            orderDate: getValue(cells[1]),
+            product: getValue(cells[2]),
+            quantity: getValue(cells[3]),
+            unit: getValue(cells[4]),
+            arrivalDate: getValue(cells[5]),
+            note: getValue(cells[6])
+
+          };
+
+        }).filter(item => {
+
+          return (
+            item.status ||
+            item.orderDate ||
+            item.product ||
+            item.quantity ||
+            item.note
+          );
+
+        });
+
+        resolve(data);
+
+      } catch (error) {
+
+        reject(error);
+
+      }
+
+    };
+
+    const url =
+      `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?sheet=${encodeURIComponent(sheetName)}&tqx=out:json;responseHandler:${callbackName}`;
+
+    script.src = url;
+
+    script.onerror = function() {
+
+      cleanup();
+
+      reject(new Error("구글 시트 연결에 실패했습니다."));
+
+    };
+
+    document.body.appendChild(script);
+
+  });
+
+}
+
+/* 전체 데이터 불러오기 */
+async function loadAll() {
+
+  document.getElementById("tableBody").innerHTML = `
+    <tr>
+      <td colspan="7" class="loading">
+        데이터를 불러오는 중입니다.
+      </td>
+    </tr>
+  `;
+
+  document.getElementById("mobileList").innerHTML = `
+    <div class="loading">데이터를 불러오는 중입니다.</div>
+  `;
+
+  try {
+
+    const results = await Promise.all(
+      SHEETS.map(sheet => loadSheet(sheet))
+    );
+
+    SHEETS.forEach((sheet, index) => {
+
+      allData[sheet] = results[index];
+
     });
-  }
 
-  // 전체 매입사 데이터 불러오기
-  async function loadAll() {
+    render();
+
+  } catch (error) {
+
+    const message = escapeHTML(error.message);
 
     document.getElementById("tableBody").innerHTML = `
       <tr>
-        <td colspan="7" class="loading">
-          데이터를 불러오는 중입니다.
+        <td colspan="7" class="error">
+          데이터를 불러오지 못했습니다.<br>
+          ${message}
         </td>
       </tr>
     `;
 
-    try {
+    document.getElementById("mobileList").innerHTML = `
+      <div class="error">
+        데이터를 불러오지 못했습니다.<br>
+        ${message}
+      </div>
+    `;
 
-      const results = await Promise.all(
-        SHEETS.map(sheet => loadSheet(sheet))
-      );
+    console.error(error);
 
-      SHEETS.forEach((sheet, index) => {
-        allData[sheet] = results[index];
-      });
-
-      render();
-
-    } catch (error) {
-
-      document.getElementById("tableBody").innerHTML = `
-        <tr>
-          <td colspan="7" class="error">
-            데이터를 불러오지 못했습니다.<br>
-            ${escapeHTML(error.message)}
-          </td>
-        </tr>
-      `;
-
-      console.error(error);
-    }
   }
 
-  // 화면 출력
-  function render() {
+}
 
-    const tbody = document.getElementById("tableBody");
+/* 정렬 */
+function sortData(data) {
 
-    let data = allData[currentSheet] || [];
+  const sortFilter =
+    document.getElementById("sortFilter").value;
 
-    const search =
-      document.getElementById("searchInput")
-        .value.trim().toLowerCase();
+  return data.sort((a, b) => {
 
-    const statusFilter =
-      document.getElementById("statusFilter").value;
+    let dateA;
+    let dateB;
 
-    const sortFilter =
-      document.getElementById("sortFilter").value;
+    let direction = 1;
 
-    // 검색 필터
-    data = data.filter(item => {
+    if (sortFilter === "arrival") {
 
-      const searchTarget =
-        `${item.product} ${item.note}`.toLowerCase();
+      dateA = dateToNumber(a.arrivalDate);
+      dateB = dateToNumber(b.arrivalDate);
 
-      const matchesSearch =
-        !search || searchTarget.includes(search);
+    } else if (sortFilter === "arrivalDesc") {
 
-      const matchesStatus =
-        !statusFilter ||
-        String(item.status).trim() === statusFilter;
+      dateA = dateToNumber(a.arrivalDate);
+      dateB = dateToNumber(b.arrivalDate);
+      direction = -1;
 
-      return matchesSearch && matchesStatus;
-    });
+    } else if (sortFilter === "order") {
 
-    // 정렬
-    data.sort((a, b) => {
+      dateA = dateToNumber(a.orderDate);
+      dateB = dateToNumber(b.orderDate);
+      direction = -1;
 
-      const dateA =
-        sortFilter === "arrival"
-          ? a.arrivalDate
-          : a.orderDate;
+    } else {
 
-      const dateB =
-        sortFilter === "arrival"
-          ? b.arrivalDate
-          : b.orderDate;
+      dateA = dateToNumber(a.orderDate);
+      dateB = dateToNumber(b.orderDate);
 
-      return String(dateB).localeCompare(String(dateA));
-    });
-
-    if (data.length === 0) {
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="7" class="empty">
-            조회된 발주 내역이 없습니다.
-          </td>
-        </tr>
-      `;
-
-      return;
     }
 
-    tbody.innerHTML = data.map(item => {
+    // 날짜가 없는 항목은 항상 마지막에 표시
+    if (dateA === null && dateB === null) return 0;
+    if (dateA === null) return 1;
+    if (dateB === null) return -1;
 
-      const statusClass =
-        getStatusClass(item.status);
+    return (dateA - dateB) * direction;
 
-      return `
-        <tr>
+  });
 
-          <td>
-            <span class="status ${statusClass}">
-              ${escapeHTML(item.status)}
+}
+
+/* 화면 출력 */
+function render() {
+
+  const tbody = document.getElementById("tableBody");
+  const mobileList = document.getElementById("mobileList");
+
+  let data = [...(allData[currentSheet] || [])];
+
+  const search =
+    document.getElementById("searchInput")
+      .value.trim().toLowerCase();
+
+  const statusFilter =
+    document.getElementById("statusFilter").value;
+
+  // 검색 및 상태 필터
+  data = data.filter(item => {
+
+    const searchTarget =
+      `${item.product} ${item.note}`.toLowerCase();
+
+    const matchesSearch =
+      !search || searchTarget.includes(search);
+
+    const matchesStatus =
+      !statusFilter ||
+      String(item.status).trim() === statusFilter;
+
+    return matchesSearch && matchesStatus;
+
+  });
+
+  // 기본 도착예정일 빠른 순 정렬
+  data = sortData(data);
+
+  if (data.length === 0) {
+
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7" class="empty">
+          조회된 발주 내역이 없습니다.
+        </td>
+      </tr>
+    `;
+
+    mobileList.innerHTML = `
+      <div class="empty">
+        조회된 발주 내역이 없습니다.
+      </div>
+    `;
+
+    return;
+
+  }
+
+  /* PC 테이블 출력 */
+  tbody.innerHTML = data.map(item => {
+
+    const statusClass = getStatusClass(item.status);
+
+    return `
+      <tr>
+
+        <td>
+          <span class="status ${statusClass}">
+            ${escapeHTML(item.status)}
+          </span>
+        </td>
+
+        <td>${escapeHTML(item.orderDate)}</td>
+
+        <td style="text-align:left;">
+          ${escapeHTML(item.product)}
+        </td>
+
+        <td>${escapeHTML(item.quantity)}</td>
+
+        <td>${escapeHTML(item.unit)}</td>
+
+        <td>${escapeHTML(item.arrivalDate)}</td>
+
+        <td>${escapeHTML(item.note)}</td>
+
+      </tr>
+    `;
+
+  }).join("");
+
+  /* 모바일 카드 출력 */
+  mobileList.innerHTML = data.map(item => {
+
+    const statusClass = getStatusClass(item.status);
+
+    return `
+      <div class="order-card">
+
+        <div class="card-top">
+
+          <span class="status ${statusClass}">
+            ${escapeHTML(item.status)}
+          </span>
+
+          <span class="card-date">
+            발주일 ${escapeHTML(item.orderDate || "-")}
+          </span>
+
+        </div>
+
+        <div class="card-product">
+          ${escapeHTML(item.product || "상품명 없음")}
+        </div>
+
+        <div class="card-quantity">
+          수량 ${escapeHTML(item.quantity || "-")}
+          ${escapeHTML(item.unit || "")}
+        </div>
+
+        <div class="card-info">
+
+          <div>
+            <span class="info-label">도착예정일</span>
+            <span class="info-value">
+              ${escapeHTML(item.arrivalDate || "-")}
             </span>
-          </td>
+          </div>
 
-          <td>${escapeHTML(item.orderDate)}</td>
+          <div>
+            <span class="info-label">진행상태</span>
+            <span class="info-value">
+              ${escapeHTML(item.status || "-")}
+            </span>
+          </div>
 
-          <td style="text-align:left;">
-            ${escapeHTML(item.product)}
-          </td>
+        </div>
 
-          <td>${escapeHTML(item.quantity)}</td>
+        ${
+          item.note
+            ? `
+              <div class="card-note">
+                <strong>비고</strong><br>
+                ${escapeHTML(item.note)}
+              </div>
+            `
+            : ""
+        }
 
-          <td>${escapeHTML(item.unit)}</td>
+      </div>
+    `;
 
-          <td>${escapeHTML(item.arrivalDate)}</td>
+  }).join("");
 
-          <td>${escapeHTML(item.note)}</td>
+}
 
-        </tr>
-      `;
+/* 최초 실행 */
+createTabs();
+loadAll();
 
-    }).join("");
-  }
-
-  // 최초 실행
-  createTabs();
-  loadAll();
-
-  // 60초마다 자동 새로고침
-  setInterval(loadAll, 60000);
+/* 60초 자동 새로고침 */
+setInterval(loadAll, 60000);
 
 </script>
 
