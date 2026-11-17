@@ -30,7 +30,7 @@ body {
   justify-content: space-between;
   align-items: center;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 h1 {
@@ -50,10 +50,10 @@ h1 {
 
 /* 매입사 탭 */
 .tabs {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
   gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .tab {
@@ -61,7 +61,7 @@ h1 {
   border: 1px solid #ddd;
   color: #555;
   border-radius: 8px;
-  padding: 11px 17px;
+  padding: 12px 8px;
   font-size: 14px;
   cursor: pointer;
   white-space: nowrap;
@@ -73,7 +73,7 @@ h1 {
   border-color: #333;
 }
 
-/* 검색 및 필터 */
+/* 검색 및 정렬 */
 .controls {
   display: flex;
   gap: 10px;
@@ -92,6 +92,10 @@ input, select {
 input {
   flex: 1;
   min-width: 150px;
+}
+
+select {
+  min-width: 160px;
 }
 
 /* PC 테이블 */
@@ -128,13 +132,14 @@ tr:hover {
   background: #fafafa;
 }
 
-/* 진행상태 */
+/* 진행상태 색상 */
 .status {
   display: inline-block;
-  padding: 7px 12px;
-  border-radius: 7px;
+  padding: 6px 11px;
+  border-radius: 6px;
   font-weight: bold;
   white-space: nowrap;
+  font-size: 13px;
 }
 
 .status-order {
@@ -164,76 +169,74 @@ tr:hover {
 
 .order-card {
   background: white;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 9px;
   border: 1px solid #eceef2;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
 }
 
-.card-top {
+.card-line1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 13px;
+  gap: 8px;
+  margin-bottom: 7px;
 }
 
-.card-date {
-  font-size: 13px;
+.card-line2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 5px;
+}
+
+.card-line3 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
   color: #777;
+  font-size: 12px;
 }
 
 .card-product {
-  font-size: 18px;
+  font-size: 15px;
   font-weight: bold;
-  line-height: 1.5;
-  margin-bottom: 14px;
-  word-break: keep-all;
+  line-height: 1.4;
   overflow-wrap: anywhere;
+  flex: 1;
+  min-width: 0;
 }
 
 .card-quantity {
-  display: inline-block;
-  background: #f2f4f7;
-  border-radius: 7px;
-  padding: 8px 12px;
-  font-size: 15px;
+  font-size: 13px;
   font-weight: bold;
-  margin-bottom: 14px;
+  white-space: nowrap;
+  color: #333;
 }
 
-.card-info {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  padding-top: 13px;
-  border-top: 1px solid #eee;
+.card-arrival {
+  font-size: 13px;
+  font-weight: bold;
+  color: #333;
+  white-space: nowrap;
 }
 
-.info-label {
-  display: block;
-  color: #999;
+.card-order-date {
   font-size: 12px;
-  margin-bottom: 6px;
-}
-
-.info-value {
-  font-size: 14px;
-  font-weight: 600;
-  overflow-wrap: anywhere;
-  line-height: 1.5;
+  color: #888;
+  white-space: nowrap;
 }
 
 .card-note {
-  margin-top: 13px;
-  padding: 11px;
-  background: #f8f9fb;
-  border-radius: 7px;
-  font-size: 13px;
-  line-height: 1.6;
-  color: #555;
+  font-size: 12px;
+  color: #777;
   overflow-wrap: anywhere;
+  text-align: right;
+  flex: 1;
+  min-width: 0;
 }
 
 .empty, .loading, .error {
@@ -242,15 +245,15 @@ tr:hover {
   color: #888;
 }
 
-/* 모바일 최적화 */
+/* 모바일 */
 @media (max-width: 700px) {
 
   body {
-    padding: 12px;
+    padding: 10px;
   }
 
   .header {
-    margin-bottom: 16px;
+    margin-bottom: 13px;
   }
 
   h1 {
@@ -258,45 +261,42 @@ tr:hover {
   }
 
   .refresh-btn {
-    padding: 10px 12px;
+    padding: 9px 11px;
     font-size: 13px;
-    white-space: nowrap;
   }
 
-  /* 매입사 탭 가로 스크롤 */
+  /* 매입사 탭 2줄 */
   .tabs {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 8px;
-    margin-right: -12px;
-    padding-right: 12px;
-    scrollbar-width: thin;
-    -webkit-overflow-scrolling: touch;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 7px;
+    margin-bottom: 13px;
   }
 
   .tab {
-    padding: 11px 16px;
-    font-size: 14px;
-    flex-shrink: 0;
+    width: 100%;
+    padding: 10px 4px;
+    font-size: 13px;
   }
 
-  /* 검색과 필터 */
+  /* 검색 및 필터 */
   .controls {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    gap: 7px;
+    margin-bottom: 12px;
   }
 
   .controls input {
     grid-column: 1 / -1;
     width: 100%;
+    min-width: 0;
   }
 
   .controls select {
     width: 100%;
     min-width: 0;
-    font-size: 13px;
     padding: 10px 7px;
+    font-size: 13px;
   }
 
   /* PC 표 숨김 */
@@ -310,43 +310,63 @@ tr:hover {
   }
 
   .order-card {
-    padding: 16px;
-    margin-bottom: 12px;
+    padding: 11px 12px;
+    margin-bottom: 8px;
+  }
+
+  .card-line1 {
+    margin-bottom: 6px;
+  }
+
+  .card-line2 {
+    margin-bottom: 5px;
   }
 
   .card-product {
-    font-size: 17px;
+    font-size: 14px;
+  }
+
+  .card-quantity {
+    font-size: 12px;
+  }
+
+  .card-arrival {
+    font-size: 12px;
   }
 
   .status {
-    padding: 8px 12px;
-    font-size: 13px;
+    font-size: 11px;
+    padding: 5px 8px;
   }
 
   .empty, .loading, .error {
-    padding: 35px 15px;
+    padding: 30px 12px;
     background: white;
     border-radius: 10px;
   }
 }
 
-/* 작은 모바일 */
+/* 아주 작은 화면 */
 @media (max-width: 360px) {
 
   body {
-    padding: 9px;
+    padding: 8px;
   }
 
   h1 {
     font-size: 17px;
   }
 
-  .card-info {
-    gap: 8px;
+  .tab {
+    font-size: 12px;
+  }
+
+  .order-card {
+    padding: 10px;
   }
 
   .card-product {
-    font-size: 16px;
+    font-size: 13px;
   }
 }
 </style>
@@ -358,13 +378,16 @@ tr:hover {
 
   <div class="header">
     <h1>📦 매입사별 발주현황</h1>
+
     <button class="refresh-btn" onclick="loadAll()">
       ↻ 새로고침
     </button>
   </div>
 
+  <!-- 매입사 탭 -->
   <div class="tabs" id="tabs"></div>
 
+  <!-- 검색 및 정렬 -->
   <div class="controls">
 
     <input
@@ -383,10 +406,7 @@ tr:hover {
     </select>
 
     <select id="sortFilter" onchange="render()">
-      <option value="arrival">도착예정일 빠른 순</option>
-      <option value="arrivalDesc">도착예정일 늦은 순</option>
-      <option value="order">발주일자 최신 순</option>
-      <option value="orderAsc">발주일자 오래된 순</option>
+      <option value="arrivalDesc">도착예정일순</option>
     </select>
 
   </div>
@@ -418,7 +438,9 @@ tr:hover {
 
   <!-- 모바일 화면 -->
   <div class="mobile-list" id="mobileList">
-    <div class="loading">데이터를 불러오는 중입니다.</div>
+    <div class="loading">
+      데이터를 불러오는 중입니다.
+    </div>
   </div>
 
 </div>
@@ -446,6 +468,7 @@ let allData = {};
 function createTabs() {
 
   const tabs = document.getElementById("tabs");
+
   tabs.innerHTML = "";
 
   SHEETS.forEach(sheet => {
@@ -563,7 +586,7 @@ function dateToNumber(value) {
 
   const text = String(value).trim();
 
-  // YYYY-MM-DD 또는 YYYY.MM.DD
+  // YYYY-MM-DD / YYYY.MM.DD / YYYY/MM/DD
   const match = text.match(
     /^(\d{4})[./-](\d{1,2})[./-](\d{1,2})/
   );
@@ -579,16 +602,15 @@ function dateToNumber(value) {
   }
 
   // YYYYMMDD
-  const compact = text.match(/^(\d{4})(\d{2})(\d{2})$/);
-
-  if (compact) {
+  if (/^\d{8}$/.test(text)) {
     return Number(text);
   }
 
-  // 그 외 날짜 문자열
+  // 그 외 날짜 형식
   const timestamp = Date.parse(text);
 
   if (!Number.isNaN(timestamp)) {
+
     const date = new Date(timestamp);
 
     return (
@@ -596,6 +618,7 @@ function dateToNumber(value) {
       (date.getMonth() + 1) * 100 +
       date.getDate()
     );
+
   }
 
   return null;
@@ -737,9 +760,7 @@ async function loadAll() {
     );
 
     SHEETS.forEach((sheet, index) => {
-
       allData[sheet] = results[index];
-
     });
 
     render();
@@ -770,49 +791,20 @@ async function loadAll() {
 
 }
 
-/* 정렬 */
+/* 도착예정일 늦은 순 정렬 */
 function sortData(data) {
-
-  const sortFilter =
-    document.getElementById("sortFilter").value;
 
   return data.sort((a, b) => {
 
-    let dateA;
-    let dateB;
+    const dateA = dateToNumber(a.arrivalDate);
+    const dateB = dateToNumber(b.arrivalDate);
 
-    let direction = 1;
-
-    if (sortFilter === "arrival") {
-
-      dateA = dateToNumber(a.arrivalDate);
-      dateB = dateToNumber(b.arrivalDate);
-
-    } else if (sortFilter === "arrivalDesc") {
-
-      dateA = dateToNumber(a.arrivalDate);
-      dateB = dateToNumber(b.arrivalDate);
-      direction = -1;
-
-    } else if (sortFilter === "order") {
-
-      dateA = dateToNumber(a.orderDate);
-      dateB = dateToNumber(b.orderDate);
-      direction = -1;
-
-    } else {
-
-      dateA = dateToNumber(a.orderDate);
-      dateB = dateToNumber(b.orderDate);
-
-    }
-
-    // 날짜가 없는 항목은 항상 마지막에 표시
+    // 날짜가 없는 항목은 마지막
     if (dateA === null && dateB === null) return 0;
     if (dateA === null) return 1;
     if (dateB === null) return -1;
 
-    return (dateA - dateB) * direction;
+    return dateB - dateA;
 
   });
 
@@ -850,7 +842,7 @@ function render() {
 
   });
 
-  // 기본 도착예정일 빠른 순 정렬
+  // 도착예정일 늦은 순
   data = sortData(data);
 
   if (data.length === 0) {
@@ -873,7 +865,7 @@ function render() {
 
   }
 
-  /* PC 테이블 출력 */
+  /* PC 표 출력 */
   tbody.innerHTML = data.map(item => {
 
     const statusClass = getStatusClass(item.status);
@@ -906,7 +898,7 @@ function render() {
 
   }).join("");
 
-  /* 모바일 카드 출력 */
+  /* 모바일 간소화 카드 출력 */
   mobileList.innerHTML = data.map(item => {
 
     const statusClass = getStatusClass(item.status);
@@ -914,55 +906,51 @@ function render() {
     return `
       <div class="order-card">
 
-        <div class="card-top">
+        <!-- 첫 번째 줄: 상태 + 도착예정일 -->
+        <div class="card-line1">
 
           <span class="status ${statusClass}">
-            ${escapeHTML(item.status)}
+            ${escapeHTML(item.status || "-")}
           </span>
 
-          <span class="card-date">
-            발주일 ${escapeHTML(item.orderDate || "-")}
+          <span class="card-arrival">
+            도착 ${escapeHTML(item.arrivalDate || "-")}
           </span>
 
         </div>
 
-        <div class="card-product">
-          ${escapeHTML(item.product || "상품명 없음")}
-        </div>
+        <!-- 두 번째 줄: 상품명 + 수량 -->
+        <div class="card-line2">
 
-        <div class="card-quantity">
-          수량 ${escapeHTML(item.quantity || "-")}
-          ${escapeHTML(item.unit || "")}
-        </div>
-
-        <div class="card-info">
-
-          <div>
-            <span class="info-label">도착예정일</span>
-            <span class="info-value">
-              ${escapeHTML(item.arrivalDate || "-")}
-            </span>
+          <div class="card-product">
+            ${escapeHTML(item.product || "상품명 없음")}
           </div>
 
-          <div>
-            <span class="info-label">진행상태</span>
-            <span class="info-value">
-              ${escapeHTML(item.status || "-")}
-            </span>
+          <div class="card-quantity">
+            ${escapeHTML(item.quantity || "-")}
+            ${escapeHTML(item.unit || "")}
           </div>
 
         </div>
 
-        ${
-          item.note
-            ? `
-              <div class="card-note">
-                <strong>비고</strong><br>
-                ${escapeHTML(item.note)}
-              </div>
-            `
-            : ""
-        }
+        <!-- 세 번째 줄: 발주일 + 비고 -->
+        <div class="card-line3">
+
+          <span class="card-order-date">
+            발주 ${escapeHTML(item.orderDate || "-")}
+          </span>
+
+          ${
+            item.note
+              ? `
+                <span class="card-note">
+                  ${escapeHTML(item.note)}
+                </span>
+              `
+              : ""
+          }
+
+        </div>
 
       </div>
     `;
@@ -975,7 +963,7 @@ function render() {
 createTabs();
 loadAll();
 
-/* 60초 자동 새로고침 */
+/* 60초마다 자동 새로고침 */
 setInterval(loadAll, 60000);
 
 </script>
